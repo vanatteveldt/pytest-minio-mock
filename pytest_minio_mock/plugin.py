@@ -497,9 +497,9 @@ class MockMinioBucket:
 
     def list_objects(
         self,
-        prefix="",
+        prefix=None,
         recursive=False,
-        start_after="",
+        start_after=None,
         include_version=False,
     ):
         """
@@ -509,11 +509,13 @@ class MockMinioBucket:
         # Initialization
         # bucket_objects = []
         seen_prefixes = set()
+        if prefix is None:
+            prefix = ""
 
         # Note: Wrapped items() in list(.) to allow modification during iteration
         for object_name, obj in list(self.objects.items()):
             if object_name.startswith(prefix) and (
-                start_after == "" or object_name > start_after
+                not start_after or object_name > start_after
             ):
                 # Handle non-recursive listing by identifying and adding unique directory names
                 if not recursive:
@@ -1196,9 +1198,9 @@ class MockMinioClient:
     def list_objects(
         self,
         bucket_name,
-        prefix="",
+        prefix=None,
         recursive=False,
-        start_after="",
+        start_after=None,
         include_version=False,
     ):
         """
